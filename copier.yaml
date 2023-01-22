@@ -1,8 +1,14 @@
 _jinja_extensions:
 - lapidary.render.jinja.LapidaryExtension
 _exclude:
-- old
-- includes
 - copier.yaml
+- copier.yml
+- ~*
+- "*.py[co]"
+- __pycache__
+- .git
+- .DS_Store
+- .svn
+- includes
 _items: schema_modules
 _item: item
