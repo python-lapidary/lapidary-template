@@ -1,6 +1,5 @@
-{% from 'includes/type_hint.py.jinja' import type_hint %}
-class {{ model.class_name }}({{ type_hint(model.base_type, path) }}):
-{% for attr in model.attributes %}    {{ attr.name }} = {{ attr.annotation.field_props.default }}
+class {{ class_model.class_name }}({{ lapidary.type_hint(class_model.base_type, item) }}):
+{% for attr in class_model.attributes %}    {{ attr.name }} = {{ attr.annotation.field_props.default }}
 {% else %}
     pass
 {%- endfor -%}

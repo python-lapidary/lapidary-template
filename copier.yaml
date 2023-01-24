@@ -1,8 +1,10 @@
 _jinja_extensions:
 - lapidary.render.jinja.LapidaryExtension
+- jinja2.ext.debug
 _items: items
-_item: item
+_answers_file: .config/copier-answer.yaml
 package:
   type: str
-document: {}
 items: {}
+signature:
+  type: str

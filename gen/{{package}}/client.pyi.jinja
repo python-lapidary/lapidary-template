@@ -1,4 +1,6 @@
-{% include 'includes/header.py.jinja' %}
+# {% include 'includes/header.txt' %}
+{% set model = lapidary.client_model -%}
+{% set path =  (package | as_module_path) / "client" -%}
 
 __all__ = [
     'ApiClient',
@@ -14,16 +16,25 @@ import pydantic
 import {{ package }}.auth
 from {{ package }}.auth import Auth
 
-{%- for imp in client_module.imports %}
+{%- for imp in model.imports %}
 import {{ imp }}
 {%- endfor %}
-{% set path = client_module.path -%}
-{% set model = client_module.body %}
 
 class ApiClient(lapidary.runtime.ClientBase):
-{% include 'includes/client/method_init.py.jinja' %}
+    def __init__(
+        self,
+        *,
+        auth: {{ package }}.auth.Auth,
+        base_url=
+{%- if model.base_urls | length > 0 -%}
+        '{{ model.base_urls[0] }}',
+{%- else -%}
+        None,
+{%- endif %}
+    ):
+        ...
 
-{% for func in model.methods | sort(attribute='name') %}
+{% for func in model.body.methods | sort(attribute='name') %}
 {%- include 'includes/client/method_operation.py.jinja' %}
 {%- else %}
     pass

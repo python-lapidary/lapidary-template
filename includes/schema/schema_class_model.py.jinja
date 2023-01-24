@@ -1,8 +1,7 @@
-{% from 'includes/type_hint.py.jinja' import type_hint %}
-class {{ model.class_name }}({{ type_hint(model.base_type, path) }}):
-{%- for attr in model.attributes %}
+class {{ class_model.class_name }}({{ lapidary.type_hint(class_model.base_type, _item) }}):
+{%- for attr in class_model.attributes %}
     {{ attr.name }}: typing_extensions.Annotated[
-        {{ type_hint(attr.annotation.type, path) }},
+        {{ lapidary.type_hint(attr.annotation.type, _item) }},
         pydantic.Field(
     {%- for key, value in attr.annotation.field_props.items() | sort %}
             {{ key }}={{ value }},
@@ -12,10 +11,10 @@ class {{ model.class_name }}({{ type_hint(model.base_type, path) }}):
 {% endfor %}
     class Config(pydantic.BaseConfig):
         use_enum_values = True
-{%- if model.has_aliases %}
+{%- if class_model.has_aliases %}
         allow_population_by_field_name = True
 {%- endif %}
-{%- if model.allow_extra %}
+{%- if class_model.allow_extra %}
         extra = pydantic.Extra.allow
 {%- else %}
         extra = pydantic.Extra.forbid
