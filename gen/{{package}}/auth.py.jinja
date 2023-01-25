@@ -1,0 +1,16 @@
+{% include 'includes/header.py.jinja' %}
+{% import 'includes/type_hint.py.jinja' as th -%}
+{% set model = lapidary.build_auth_module_model(item) -%}
+
+import dataclasses
+{%- for imp in model.imports %}
+import {{ imp }}
+{%- endfor %}
+
+@dataclasses.dataclass
+class Auth:
+{%- for name, auth_model in model.schemes.items() %}
+    {{ name }}: {{ th.type_hint(auth_model, auth_module.path) }}
+{%- else %}
+    pass
+{%- endfor %}

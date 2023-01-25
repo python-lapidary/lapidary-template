@@ -1,0 +1,19 @@
+{% include 'includes/header.py.jinja' %}
+{% set module_model = lapidary.build_schema_module_model(item) -%}
+from __future__ import annotations
+
+import typing
+
+import lapidary.runtime
+import pydantic
+import typing_extensions
+
+{%- for imp in module_model.imports %}
+import {{ imp }}
+{%- endfor %}
+{%- for class_model in module_model.classes %}
+{% include 'includes/schema/schema_class_{}.py.jinja'.format(class_model.model_type.name) %}
+{%- endfor %}
+{% for class_model in module_model.classes %}{% if class_model.base_type.full_name() == 'pydantic.BaseModel' %}
+{{ class_model.class_name }}.update_forward_refs()
+{%- endif %}{% endfor %}
